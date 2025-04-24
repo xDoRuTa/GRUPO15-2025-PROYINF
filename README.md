@@ -10,3 +10,10 @@ Este es el repositorio del *Grupo 15*, cuyos integrantes son:
 
 ## Videos
 * [Video presentación cliente](https://aula.usm.cl/mod/resource/view.php?id=6322574)
+
+## Instrucciones Página
+
+* Se debe instalar XAMPP de no tenerlo ya instalado
+* Se debe iniciar (con el boton start) el apache y el mysql
+* Se debe ir a un navegador, de preferencia google chrome
+* Se debe escrrbir localhost con el nombre de la carpeta del proyecto, ajustarla a su preferencia.
