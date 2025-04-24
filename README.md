@@ -16,4 +16,4 @@ Este es el repositorio del *Grupo 15*, cuyos integrantes son:
 * Se debe instalar XAMPP de no tenerlo ya instalado
 * Se debe iniciar (con el boton start) el apache y el mysql
 * Se debe ir a un navegador, de preferencia google chrome
-* Se debe escrrbir localhost con el nombre de la carpeta del proyecto, ajustarla a su preferencia.
+* Se debe escribir localhost con el nombre de la carpeta del proyecto, ajustarla a su preferencia.
