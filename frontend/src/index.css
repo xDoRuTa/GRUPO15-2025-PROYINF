@@ -1,0 +1,73 @@
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+}
+
+header, footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1em;
+    position: relative;
+}
+
+/* Contenedor con diseño relativo para alinear título y botón */
+.header-contenedor {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 60px; /* Puedes ajustar según necesidad */
+}
+
+/* Título centrado */
+.header-contenedor h1 {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+/* Botón a la derecha */
+.boton-volver {
+    position: absolute;
+    right: 1em;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Estilo general de botones */
+.boton, .boton-volver {
+    display: inline-block;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+
+.boton:hover, .boton-volver:hover {
+    background-color: #0056b3;
+}
+
+.botones-navegacion {
+    text-align: center;
+    margin: 2em 0;
+}
+
+section {
+    padding: 2em;
+    margin: 2em;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
