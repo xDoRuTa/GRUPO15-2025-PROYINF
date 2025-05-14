@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Banco de preguntas</title>
+    <link rel="stylesheet" href="src/bancodepreguntas.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-contenedor">
+            <h1>Banco de preguntas</h1>
+            <a href="index.html" class="boton-volver">Volver a Inicio</a>
+        </div>
+    </header>
+
+    <section>
+        <form action="http://localhost:3000/agregar-pregunta" method="POST" enctype="multipart/form-data">
+            <label for="pregunta">1 - Ingrese aquí la pregunta a agregar:</label>
+            <textarea id="pregunta" name="pregunta" rows="4" cols="50" required></textarea>
+
+            <label for="alternativaCorrecta">2 - Ingrese la materia de la pregunta:</label>
+            <select id="alternativaCorrecta" name="alternativaCorrecta" required>
+                <option value="">Materia</option>
+                <option value="CL">Competencia Lectora</option>
+                <option value="CM1">Competencia Matemática 1</option>
+                <option value="CM2">Competencia Matemática 2</option>
+                <option value="HCS">Historia y Ciencias Sociales</option>
+                <option value="C">Ciencias</option>
+
+            </select>
+
+            <label for="imagen">3 - Ingrese aqui imagen de referencia en caso de ser necesario:</label>
+            <input type="file" id="imagen" name="imagen" accept="image/*">
+
+            <label for="alternativaA">4 - Alternativa A:</label>
+            <input type="text" id="alternativaA" name="alternativaA" required>
+
+            <label for="alternativaB">5 - Alternativa B:</label>
+            <input type="text" id="alternativaB" name="alternativaB" required>
+
+            <label for="alternativaC">6 - Alternativa C:</label>
+            <input type="text" id="alternativaC" name="alternativaC" required>
+
+            <label for="alternativaD">7 - Alternativa D:</label>
+            <input type="text" id="alternativaD" name="alternativaD" required>
+
+            <label for="alternativaCorrecta">8 - Indique la alternativa correcta:</label>
+            <select id="alternativaCorrecta" name="alternativaCorrecta" required>
+                <option value="">Alternativa</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select>
+
+
+            <button type="submit" class="boton">Agregar Pregunta</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>Una vez implementado el Login, se podrá ingresar a banco de preguntas luego de la verificación de identidad</p>
+    </footer>
+
+</body>
+</html>
