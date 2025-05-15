@@ -16,15 +16,13 @@ header, footer {
     position: relative;
 }
 
-/* Contenedor con diseño relativo para alinear título y botón */
 .header-contenedor {
     position: relative;
     max-width: 1200px;
     margin: 0 auto;
-    height: 60px; /* Puedes ajustar según necesidad */
+    height: 60px;
 }
 
-/* Título centrado */
 .header-contenedor h1 {
     position: absolute;
     left: 50%;
@@ -33,7 +31,6 @@ header, footer {
     margin: 0;
 }
 
-/* Botón a la derecha */
 .boton-volver {
     position: absolute;
     right: 1em;
@@ -41,7 +38,6 @@ header, footer {
     transform: translateY(-50%);
 }
 
-/* Estilo general de botones */
 .boton, .boton-volver {
     display: inline-block;
     background-color: #007BFF;
@@ -70,4 +66,102 @@ section {
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.texto-centrado {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 1em;
+}
+
+
+/* NUEVO ESTILO PARA PREGUNTAS */
+#test {
+    border: 1px solid #ccc;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: #fff;
+    max-width: 600px;
+    margin: 0 auto 20px;
+}
+
+/* Botones Anterior/Siguiente */
+#navigation-buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#navigation-buttons button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background-color: #007BFF;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+#navigation-buttons button:hover {
+    background-color: #0056b3;
+}
+
+/* Panel lateral con botones de preguntas */
+#question-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.question-button {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #ddd;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.question-button:hover {
+    background-color: #bbb;
+}
+
+.question-button.answered {
+    background-color: #28a745; /* verde */
+    color: white;
+}
+
+.question-button.unanswered {
+    background-color: #dc3545; /* rojo */
+    color: white;
+}
+
+@media (min-width: 900px) {
+    .quiz-container {
+        display: flex;
+        gap: 2em;
+    }
+
+    #test-area {
+        flex: 2;
+    }
+
+    #nav-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+header img {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    height: 80px; /* o el tamaño que quieras */
 }
