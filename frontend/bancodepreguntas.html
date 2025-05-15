@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Banco de preguntas</title>
+    <link rel="stylesheet" href="src/bancodepreguntas.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-contenedor">
+            <h1>Banco de preguntas</h1>
+            <a href="index.html" class="boton-volver">Volver a Inicio</a>
+        </div>
+    </header>
+
+    <section>
+        <form id="formularioPregunta">  
+            <label for="pregunta">1 - Ingrese aquí la pregunta a agregar:</label>
+            <textarea id="pregunta" name="pregunta" rows="4" cols="50" required></textarea>
+
+            <label for="materia">2 - Ingrese la materia de la pregunta:</label>
+            <select id="materia" name="materia" required>
+                <option value="">Materia</option>
+                <option value="CL">Competencia Lectora</option>
+                <option value="CM1">Competencia Matemática 1</option>
+                <option value="CM2">Competencia Matemática 2</option>
+                <option value="HCS">Historia y Ciencias Sociales</option>
+                <option value="C">Ciencias</option>
+            </select>
+
+            <label for="imagen">3 - Ingrese aquí imagen de referencia en caso de ser necesario:</label>
+            <input type="file" id="imagen" name="imagen" accept="image/*">
+
+            <label for="alternativaA">4 - Alternativa A:</label>
+            <input type="text" id="alternativaA" name="alternativaA" required>
+
+            <label for="alternativaB">5 - Alternativa B:</label>
+            <input type="text" id="alternativaB" name="alternativaB" required>
+
+            <label for="alternativaC">6 - Alternativa C:</label>
+            <input type="text" id="alternativaC" name="alternativaC" required>
+
+            <label for="alternativaD">7 - Alternativa D:</label>
+            <input type="text" id="alternativaD" name="alternativaD" required>
+
+            <label for="alternativaCorrecta">8 - Indique la alternativa correcta:</label>
+            <select id="alternativaCorrecta" name="alternativaCorrecta" required>
+                <option value="">Alternativa</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+            </select>
+
+            <button id="btnAgregarPregunta" type="submit" class="boton">Agregar Pregunta</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>Una vez implementado el Login, se podrá ingresar a banco de preguntas luego de la verificación de identidad</p>
+    </footer>
+
+    <!-- JS interno directo y funcional -->
+    <script>
+        document.querySelector('#formularioPregunta').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const pregunta = document.querySelector('#pregunta').value;
+            const materia = document.querySelector('#materia').value;
+            const alternativaA = document.querySelector('#alternativaA').value;
+            const alternativaB = document.querySelector('#alternativaB').value;
+            const alternativaC = document.querySelector('#alternativaC').value;
+            const alternativaD = document.querySelector('#alternativaD').value;
+            const correcta = document.querySelector('#alternativaCorrecta').value;
+
+            const datos = {
+                texto: pregunta,
+                materia: materia,
+                imagen: "",  
+                alternativaA: alternativaA,
+                alternativaB: alternativaB,
+                alternativaC: alternativaC,
+                alternativaD: alternativaD,
+                correcta: correcta
+            };
+
+            fetch('http://localhost:3000/api/preguntas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Pregunta enviada correctamente:', data);
+                alert('Pregunta enviada correctamente');
+                document.querySelector('#formularioPregunta').reset();
+            })
+            .catch(error => {
+                console.error('Error al enviar pregunta:', error);
+                alert('Error al enviar pregunta');
+            });
+        });
+    </script>
+</body>
+</html>
