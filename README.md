@@ -10,7 +10,7 @@ Este es el repositorio del *Grupo 15*, cuyos integrantes son:
 
 ## Videos
 * [Video presentación cliente](https://aula.usm.cl/mod/resource/view.php?id=6322574)
-* [Video prototipo hito 3]https://youtu.be/MSrKbSECel8
+* [Video prototipo hito 3](https://youtu.be/MSrKbSECel8)
 ## Instrucciones Página
 
 * Hay que asegurarse de tener todos los archivos que estan en este github que son:
