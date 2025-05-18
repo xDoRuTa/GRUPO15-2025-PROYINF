@@ -13,4 +13,15 @@ Este es el repositorio del *Grupo 15*, cuyos integrantes son:
 
 ## Instrucciones Página
 
-* EDITAAAAR
+* Hay que asegurarse de tener todos los archivos que estan en este github que son:
+    * Carpeta Frontend
+    * Carpeta Backend
+    * docker.compose.yml
+* Posteriormente se requiere el uso de comandos para acceder a un sistema linux, en nuestro caso,
+  se uso WSL.
+* Es importante tener docker y docker compose en el dispositivo, esto para la creación de los contenedores.
+* Tambien se requiere vite y node.js, instalando todo lo necesario para ello.
+* Tras ello, se debe usar los comandos para levantar los contenedores propios del sistema de docker (es necesario aclarar que,
+  para este caso, se usan puertos por defecto, el 5173,3000 y el 5432 para el frontend, el backend y la bd respectivamente).
+  NOTA: En el video (y para efectos practicos), sugerimos que al levantar la pagina se use el comando npm run dev --5174, por seguridad.
+* Verificar (si usted así lo desea) que se haya subido su pregunta a la BD.
