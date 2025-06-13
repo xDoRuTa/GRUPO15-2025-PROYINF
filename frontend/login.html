@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar Sesión</title>
+  <link rel="stylesheet" href="src/index.css">
+</head>
+<body>
+
+  <header>-
+    <h1>Inicio de Sesión</h1>
+  </header>
+
+  <section id="login-section" style="text-align: center; margin: 50px auto; max-width: 400px;">
+    <form id="loginForm">
+      <h2>Accede a tu cuenta</h2>
+      <input type="email" name="email" placeholder="Correo electrónico" required style="padding: 10px; width: 100%; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc;">
+      <input type="password" name="password" placeholder="Contraseña" required style="padding: 10px; width: 100%; margin-bottom: 20px; border-radius: 5px; border: 1px solid #ccc;">
+      <button type="submit" class="boton">Ingresar</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>Plataforma de ensayos PAES - Red SIP</p>
+  </footer>
+
+  <script type="module" src="/src/auth/login.js"></script>
+</body>
+</html>
