@@ -26,3 +26,8 @@ Este es el repositorio del *Grupo 15*, cuyos integrantes son:
   para este caso, se usan puertos por defecto, el 5173,3000 y el 5432 para el frontend, el backend y la bd respectivamente).
   NOTA: En el video (y para efectos practicos), sugerimos que al levantar la pagina se use el comando npm run dev --5174, por seguridad.
 * Verificar (si usted así lo desea) que se haya subido su pregunta a la BD.
+
+## Instrucciones Página (Parte II)
+* Para este nuevo avance, se usó firebase para la creación de un login básico, por tanto se recomienda tener ciertas nociones del mismo (aunque es bastante intuitivo la verdad)
+* Se requiere tener una cuenta de google para un mejor uso de la misma.
+* Se requiere tambien cierta sincronizacion con los documentos a trabajar, así como bien una key para el correcto direccionamiento al sistema de cuentas.
