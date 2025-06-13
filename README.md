@@ -30,4 +30,4 @@ Este es el repositorio del *Grupo 15*, cuyos integrantes son:
 ## Instrucciones Página (Parte II)
 * Para este nuevo avance, se usó firebase para la creación de un login básico, por tanto se recomienda tener ciertas nociones del mismo (aunque es bastante intuitivo la verdad)
 * Se requiere tener una cuenta de google para un mejor uso de la misma.
-* Se requiere tambien cierta sincronizacion con los documentos a trabajar, así como bien una key para el correcto direccionamiento al sistema de cuentas.
+* Se requiere tambien cierta sincronizacion con los documentos a trabajar, así como bien una key para el correcto direccionamiento al sistema de cuentas. (Aunque la key nombrada está en el archivo llamado config.js)
