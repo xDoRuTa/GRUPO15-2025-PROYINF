@@ -17,14 +17,42 @@
   </header>
 
   <main>
-    <section class="tarjeta">
+    <aside class="tarjeta">
       <p class="texto-centrado">Elige la categoría de preguntas que deseas revisar:</p>
       <div class="grid-preguntas">
-        <a href="#" class="card-pregunta">📖<span>Competencia Lectora</span></a>
-        <a href="#" class="card-pregunta">➗<span>Matemática 1</span></a>
-        <a href="#" class="card-pregunta">📐<span>Matemática 2</span></a>
-        <a href="#" class="card-pregunta">🏛️<span>Historia y Cs. Sociales</span></a>
-        <a href="#" class="card-pregunta">🔬<span>Ciencias</span></a>
+        <a href="#CL" class="card-pregunta">📖<span>Competencia Lectora</span></a>
+        <a href="#CM1" class="card-pregunta">➗<span>Matemática 1</span></a>
+        <a href="#CM2" class="card-pregunta">📐<span>Matemática 2</span></a>
+        <a href="#HCS" class="card-pregunta">🏛️<span>Historia y Cs. Sociales</span></a>
+        <a href="#C" class="card-pregunta">🔬<span>Ciencias</span></a>
+      </div>
+    </aside>
+
+    <section id="preguntas-contenedor">
+      <div id="CL">
+        <h2>📖 Competencia Lectora</h2>
+        <div class="lista-preguntas"></div>
+        <button class="btn-crear-ensayo" data-materia="CL">Crear Ensayo</button>
+      </div>
+      <div id="CM1">
+        <h2>➗ Matemática 1</h2>
+        <div class="lista-preguntas"></div>
+        <button class="btn-crear-ensayo" data-materia="CM1">Crear Ensayo</button>
+      </div>
+      <div id="CM2">
+        <h2>📐 Matemática 2</h2>
+        <div class="lista-preguntas"></div>
+        <button class="btn-crear-ensayo" data-materia="CM2">Crear Ensayo</button>
+      </div>
+      <div id="HCS">
+        <h2>🏛️ Historia y Cs. Sociales</h2>
+        <div class="lista-preguntas"></div>
+        <button class="btn-crear-ensayo" data-materia="HCS">Crear Ensayo</button>
+      </div>
+      <div id="C">
+        <h2>🔬 Ciencias</h2>
+        <div class="lista-preguntas"></div>
+        <button class="btn-crear-ensayo" data-materia="C">Crear Ensayo</button>
       </div>
     </section>
   </main>
@@ -32,6 +60,128 @@
   <footer>
     <p>&copy; Plataforma de ensayos PAES - Red SIP</p>
   </footer>
+
+<script>
+  async function cargarPreguntas() {
+    try {
+      const res = await fetch('http://localhost:3000/api/preguntas');
+      const preguntas = await res.json();
+
+      preguntas.forEach(pregunta => {
+        const seccion = document.querySelector(`#${pregunta.materia} .lista-preguntas`);
+        if (seccion) {
+          const div = document.createElement('div');
+          div.classList.add('pregunta-item');
+
+          const imagenHTML = pregunta.imagen
+            ? `<img src="${pregunta.imagen}" alt="Imagen de pregunta" class="imagen-pregunta" style="max-width: 200px; display:block; margin:10px 0;">`
+            : '';
+
+          div.innerHTML = `
+            <input type="checkbox" class="checkbox-pregunta" data-id="${pregunta.id}" />
+            <p><strong>Pregunta:</strong> ${pregunta.texto}</p>
+            ${imagenHTML}
+            <ul>
+              <li><strong>A:</strong> ${pregunta.alternativa_a}</li>
+              <li><strong>B:</strong> ${pregunta.alternativa_b}</li>
+              <li><strong>C:</strong> ${pregunta.alternativa_c}</li>
+              <li><strong>D:</strong> ${pregunta.alternativa_d}</li>
+            </ul>
+            <p><strong>Correcta:</strong> ${pregunta.correcta}</p>
+            <button class="btn-eliminar" data-id="${pregunta.id}">Eliminar</button>
+            <hr>
+          `;
+          seccion.appendChild(div);
+        }
+      });
+
+      document.querySelectorAll('.btn-eliminar').forEach(button => {
+        button.addEventListener('click', async (e) => {
+          const id = e.target.getAttribute('data-id');
+          if (confirm('¿Estás seguro de eliminar esta pregunta?')) {
+            try {
+              const res = await fetch(`http://localhost:3000/api/preguntas/${id}`, {
+                method: 'DELETE'
+              });
+              const data = await res.json();
+
+              if (res.ok) {
+                alert(data.mensaje);
+                e.target.parentElement.remove();
+              } else {
+                alert(data.error || 'Error al eliminar la pregunta');
+              }
+            } catch (error) {
+              alert('Error al eliminar la pregunta');
+              console.error(error);
+            }
+          }
+        });
+      });
+
+    } catch (error) {
+      console.error('Error al cargar preguntas:', error);
+    }
+  }
+
+  // ✅ Crear ensayo con preguntas seleccionadas
+  document.querySelectorAll('.btn-crear-ensayo').forEach(boton => {
+    boton.addEventListener('click', async () => {
+      const materia = boton.getAttribute('data-materia');
+      const contenedor = document.querySelector(`#${materia}`);
+      const checkboxes = contenedor.querySelectorAll('.checkbox-pregunta:checked');
+
+      const idsSeleccionados = Array.from(checkboxes).map(cb => cb.getAttribute('data-id'));
+
+      if (idsSeleccionados.length === 0) {
+        alert('Debes seleccionar al menos una pregunta para crear el ensayo.');
+        return;
+      }
+
+      // Obtener los datos completos de cada pregunta
+      const preguntasSeleccionadas = [];
+
+      for (const id of idsSeleccionados) {
+        try {
+          const res = await fetch(`http://localhost:3000/api/preguntas/${id}`);
+          const pregunta = await res.json();
+          preguntasSeleccionadas.push(pregunta);
+        } catch (error) {
+          console.error(`Error al obtener la pregunta con ID ${id}:`, error);
+        }
+      }
+
+      // Enviar al backend para guardar
+      try {
+        const res = await fetch('http://localhost:3000/api/crearEnsayo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            materia: materia,
+            preguntas: preguntasSeleccionadas
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert('Ensayo creado exitosamente.');
+          window.location.href = `ensayo_${materia}.html`;
+        } else {
+          alert('Error al crear el ensayo: ' + data.error);
+        }
+      } catch (error) {
+        alert('Error al enviar las preguntas al servidor');
+        console.error(error);
+      }
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', cargarPreguntas);
+</script>
+
 
 </body>
 </html>

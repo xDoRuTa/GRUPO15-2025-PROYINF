@@ -1,24 +1,221 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Ensayos</title>
-    <link rel="stylesheet" href="src/index.css">
+  <meta charset="UTF-8" />
+  <title>Ensayo CM2</title>
+  <link rel="stylesheet" href="src/ensayo.css" />
 </head>
 <body>
-    <header>
-        <div class="header-contenedor">
-            <h1>Competencia Matemática M2</h1>
-            <a href="index.html" class="boton-volver">Volver a Inicio</a>
-        </div>
-    </header>
+  <header>
+    <div class="header-contenedor">
+      <h1>Ensayo CM2</h1>
+      <a href="index.html" class="boton-volver" id="botonVolver" onclick="return confirmarSalida()">Volver a Inicio</a>
+    </div>
+  </header>
 
-    <section>
+  <section class="quiz-container">
+    <div id="test-area">
+      <h2 id="test_status"></h2>
+      <div id="timer"></div>
+      <div id="test"></div>
+      <div id="navigation-buttons">
+        <button onclick="goPrev()">Anterior</button>
+        <button onclick="goNext()">Siguiente</button>
+        <button onclick="submitQuiz()">Terminar</button>
+      </div>
+    </div>
+    <div id="nav-area">
+      <h3>Navegación</h3>
+      <div id="question-nav"></div>
+    </div>
+  </section>
 
-    </section>
+  <footer>
+    <p>Plataforma de ensayos PAES - Red SIP</p>
+  </footer>
 
-    <footer>
-        <p>Plataforma de ensayos PAES - (Red SIP)</p>
-    </footer>
+<script>
+  let pos = 0;
+  let correct = 0;
+  let userAnswers = [];
+  let timerInterval;
+  let secondsLeft = 300;
+
+  const questions = [
+  {
+    "question": "Considera la figura adjunta formada por tres cuadrados, uno de lado a metros \ny otros dos de área p² metros cuadrados, cada uno.\n\n¿Cuál de las siguientes expresiones representa el área de la zona gris en \nmetros cuadrados?",
+    "options": [
+      "(a - 2p)(a + 2p)",
+      "(a - √2p)(a + √2p)",
+      "2(a - p)²",
+      "(a - 2p)²"
+    ],
+    "answer": "2(a - p)²"
+  },
+  {
+    "question": "Si p = 7⁴⁶ - 7⁴⁴, ¿Cuál de las siguientes afirmaciones es verdadera con \nrespecto a p? ",
+    "options": [
+      "Es un numero impar",
+      "Es un numero primo",
+      "Es un múltiplo de 13",
+      "Es un múltiplo de 21"
+    ],
+    "answer": "Es un múltiplo de 21"
+  },
+  {
+    "question": "¿Cuál es el valor de log3 0,111?",
+    "options": [
+      "1/2",
+      "-2",
+      "-1/log3",
+      "2"
+    ],
+    "answer": "-2"
+  },
+  {
+    "question": "Se tiene un cuadrado A cuyo lado mide p cm y un cuadrado B cuyo lado es igual a la medida de la diagonal del cuadrado A.\n\n¿Para cuál de los siguientes valores de p, en centímetros, la suma de las diagonales de los cuadrados A y B es un número racional?",
+    "options": [
+      "2",
+      "2(√2 - 1)",
+      "2(√2 + 1)",
+      "2(2 - √2)"
+    ],
+    "answer": "2(2 - √2)"
+  }
+];
+
+
+    let shuffledOptions = [];
+
+    function _(id) { return document.getElementById(id); }
+
+    function shuffleArray(array) {
+      let a = [...array];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function saveState() {
+      localStorage.setItem('quiz_userAnswers', JSON.stringify(userAnswers));
+      localStorage.setItem('quiz_pos', pos);
+      localStorage.setItem('quiz_secondsLeft', secondsLeft);
+    }
+
+    function loadState() {
+      const savedAnswers = localStorage.getItem('quiz_userAnswers');
+      const savedPos = localStorage.getItem('quiz_pos');
+      const savedSeconds = localStorage.getItem('quiz_secondsLeft');
+
+      if (savedAnswers) userAnswers = JSON.parse(savedAnswers);
+      if (savedPos) pos = parseInt(savedPos);
+      if (savedSeconds) secondsLeft = parseInt(savedSeconds);
+    }
+
+    function renderQuestion() {
+      const q = questions[pos];
+      const test = _("test");
+      _("test_status").innerHTML = `Pregunta ${pos + 1} de ${questions.length}`;
+
+      if (!shuffledOptions[pos]) {
+        shuffledOptions[pos] = shuffleArray(q.options);
+      }
+
+      let html = `<h3>${q.question}</h3>`;
+      shuffledOptions[pos].forEach(opt => {
+        const checked = userAnswers[pos] === opt ? "checked" : "";
+        html += `<label><input type="radio" name="choices" value="${opt}" ${checked}> ${opt}</label><br>`;
+      });
+
+      test.innerHTML = html;
+      updateButtons();
+    }
+
+    function goNext() {
+      if (pos < questions.length - 1) pos++;
+      saveState();
+      renderQuestion();
+    }
+
+    function goPrev() {
+      if (pos > 0) pos--;
+      saveState();
+      renderQuestion();
+    }
+
+    function goToQuestion(n) {
+      pos = n;
+      saveState();
+      renderQuestion();
+    }
+
+    function saveAnswer(value) {
+      userAnswers[pos] = value;
+      saveState();
+      updateButtons();
+    }
+
+    function updateButtons() {
+      const nav = _("question-nav");
+      nav.innerHTML = "";
+      for (let i = 0; i < questions.length; i++) {
+        const btn = document.createElement("button");
+        btn.className = "question-button";
+        if (userAnswers[i]) btn.classList.add("answered");
+        else btn.classList.add("unanswered");
+        btn.textContent = i + 1;
+        btn.onclick = () => goToQuestion(i);
+        nav.appendChild(btn);
+      }
+    }
+
+    function submitQuiz(forced = false) {
+      const unanswered = userAnswers.filter(a => a === null || a === undefined);
+      if (!forced && unanswered.length > 0) {
+        alert("Responde todas las preguntas antes de enviar.");
+        return;
+      }
+      clearInterval(timerInterval);
+      localStorage.clear();
+
+      correct = userAnswers.filter((ans, i) => ans === questions[i].answer).length;
+
+      _("test").innerHTML = `<h2>Obtuviste ${correct} de ${questions.length} respuestas correctas.</h2>`;
+      _("test_status").innerHTML = "Ensayo CM2 Completado";
+      _("navigation-buttons").style.display = "none";
+      _("botonVolver").onclick = null;
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        secondsLeft--;
+        const minutes = Math.floor(secondsLeft / 60);
+        const seconds = secondsLeft % 60;
+        _("timer").textContent = `Tiempo restante: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        saveState();
+
+        if (secondsLeft <= 0) {
+          alert("¡Se acabó el tiempo! El ensayo se cerrará automáticamente.");
+          submitQuiz(true);
+        }
+      }, 1000);
+    }
+
+    function confirmarSalida() {
+      alert("No puedes volver al inicio mientras realizas el ensayo.");
+      return false;
+    }
+
+    window.addEventListener("load", () => {
+      loadState();
+      _("test").addEventListener("change", e => {
+        if (e.target.name === "choices") saveAnswer(e.target.value);
+      });
+      renderQuestion();
+      startTimer();
+    });
+  </script>
 </body>
 </html>

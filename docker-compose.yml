@@ -18,6 +18,9 @@ services:
       - "3000:3000"
     depends_on:
       - db
+    volumes:
+      - .:/app             # Montamos todo el proyecto en /app
+    working_dir: /app/backend  # Establecemos el directorio de trabajo en /app/backend
 
   frontend:
     build: ./frontend

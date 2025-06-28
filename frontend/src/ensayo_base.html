@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Ensayo CL</title>
+  <title>Ensayo</title>
   <link rel="stylesheet" href="src/ensayo.css" />
 </head>
 <body>
   <header>
     <div class="header-contenedor">
-      <h1>Ensayo CL</h1>
+      <h1>Ensayo</h1>
       <a href="index.html" class="boton-volver" id="botonVolver" onclick="return confirmarSalida()">Volver a Inicio</a>
     </div>
   </header>
@@ -41,18 +41,7 @@
   let timerInterval;
   let secondsLeft = 300;
 
-  const questions = [
-  {
-    "question": "Según lo expresado en el texto, ¿qué permitiría llegar a una redefinición de la unidad de masa?",
-    "options": [
-      "La radiación del átomo de cesio 133.",
-      "La ecuación de Epstein.",
-      "La radiación del kriptón 86.",
-      "La constante de Planck."
-    ],
-    "answer": "La constante de Planck."
-  }
-];
+  const questions = /*__PREGUNTAS__*/;
 
 
     let shuffledOptions = [];
@@ -153,7 +142,7 @@
       correct = userAnswers.filter((ans, i) => ans === questions[i].answer).length;
 
       _("test").innerHTML = `<h2>Obtuviste ${correct} de ${questions.length} respuestas correctas.</h2>`;
-      _("test_status").innerHTML = "Ensayo CL Completado";
+      _("test_status").innerHTML = "Ensayo Completado";
       _("navigation-buttons").style.display = "none";
       _("botonVolver").onclick = null;
     }

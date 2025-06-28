@@ -1,188 +1,191 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <title>Competencia Matemática M1</title>
-    <link rel="stylesheet" href="src/index.css" />
+  <meta charset="UTF-8" />
+  <title>Ensayo CM1</title>
+  <link rel="stylesheet" href="src/ensayo.css" />
 </head>
 <body>
-    <header>
-        <div class="header-contenedor">
-            <h1>Competencia Matemática M1</h1>
-            <a href="index.html" class="boton-volver" id="botonVolver" onclick="return confirmarSalida()">Volver a Inicio</a>
-        </div>
-    </header>
+  <header>
+    <div class="header-contenedor">
+      <h1>Ensayo CM1</h1>
+      <a href="index.html" class="boton-volver" id="botonVolver" onclick="return confirmarSalida()">Volver a Inicio</a>
+    </div>
+  </header>
 
-    <section class="quiz-container">
-        <div id="test-area">
-            <h2 id="test_status"></h2>
-            <div id="timer" style="text-align: center; font-size: 18px; font-weight: bold; margin-bottom: 15px;"></div>
-            <div id="test"></div>
-            <div id="navigation-buttons">
-                <button onclick="goPrev()">Anterior</button>
-                <button onclick="goNext()">Siguiente</button>
-                <button onclick="submitQuiz()">Terminar</button>
-            </div>
-        </div>
-        <div id="nav-area">
-            <h3>Navegación</h3>
-            <div id="question-nav"></div>
-        </div>
-    </section>
+  <section class="quiz-container">
+    <div id="test-area">
+      <h2 id="test_status"></h2>
+      <div id="timer"></div>
+      <div id="test"></div>
+      <div id="navigation-buttons">
+        <button onclick="goPrev()">Anterior</button>
+        <button onclick="goNext()">Siguiente</button>
+        <button onclick="submitQuiz()">Terminar</button>
+      </div>
+    </div>
+    <div id="nav-area">
+      <h3>Navegación</h3>
+      <div id="question-nav"></div>
+    </div>
+  </section>
 
-    <footer>
-        <p>Plataforma de ensayos PAES - (Red SIP)</p>
-    </footer>
+  <footer>
+    <p>Plataforma de ensayos PAES - Red SIP</p>
+  </footer>
 
 <script>
-    let pos = 0;
-    let correct = 0;
-    let userAnswers = Array(4).fill(null);
-    let timerInterval;
-    let secondsLeft = 300; // 5 minutos
+  let pos = 0;
+  let correct = 0;
+  let userAnswers = [];
+  let timerInterval;
+  let secondsLeft = 300;
 
-    const questions = [
-        { question: "¿Cuánto es 10 + 4?", options: ["12", "14", "16", "18"], answer: "14" },
-        { question: "¿Cuánto es 20 - 9?", options: ["7", "13", "11", "12"], answer: "11" },
-        { question: "¿Cuánto es 7 × 3?", options: ["21", "24", "25", "18"], answer: "21" },
-        { question: "¿Cuánto es 8 ÷ 2?", options: ["10", "2", "4", "8"], answer: "4" }
-    ];
+  const questions = [
+  {
+    "question": "En estadística descriptiva, para definir la cantidad de intervalos en los cuales se agruparán los datos se suele utilizar la regla de Sturges, la cual indica que una cantidad recomendable de intervalos en una muestra de tamaño N, es (1 + log2 N).\n\nConsidera que para una muestra de N = 2n datos, con n un número entero positivo, la regla de Sturges indica que se debe utilizar q intervalos.",
+    "options": [
+      "2N",
+      "3N",
+      "4N",
+      "8N"
+    ],
+    "answer": "8N"
+  }
+];
+
 
     let shuffledOptions = [];
 
     function _(id) { return document.getElementById(id); }
 
     function shuffleArray(array) {
-        let a = [...array];
-        for (let i = a.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [a[i], a[j]] = [a[j], a[i]];
-        }
-        return a;
+      let a = [...array];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
     }
 
-    // Guardar estado en localStorage
     function saveState() {
-        localStorage.setItem('quiz_userAnswers', JSON.stringify(userAnswers));
-        localStorage.setItem('quiz_pos', pos);
-        localStorage.setItem('quiz_secondsLeft', secondsLeft);
+      localStorage.setItem('quiz_userAnswers', JSON.stringify(userAnswers));
+      localStorage.setItem('quiz_pos', pos);
+      localStorage.setItem('quiz_secondsLeft', secondsLeft);
     }
 
-    // Cargar estado de localStorage si existe
     function loadState() {
-        const savedAnswers = localStorage.getItem('quiz_userAnswers');
-        const savedPos = localStorage.getItem('quiz_pos');
-        const savedSeconds = localStorage.getItem('quiz_secondsLeft');
+      const savedAnswers = localStorage.getItem('quiz_userAnswers');
+      const savedPos = localStorage.getItem('quiz_pos');
+      const savedSeconds = localStorage.getItem('quiz_secondsLeft');
 
-        if (savedAnswers) userAnswers = JSON.parse(savedAnswers);
-        if (savedPos) pos = parseInt(savedPos);
-        if (savedSeconds) secondsLeft = parseInt(savedSeconds);
+      if (savedAnswers) userAnswers = JSON.parse(savedAnswers);
+      if (savedPos) pos = parseInt(savedPos);
+      if (savedSeconds) secondsLeft = parseInt(savedSeconds);
     }
 
     function renderQuestion() {
-        const q = questions[pos];
-        const test = _("test");
-        _("test_status").innerHTML = `Pregunta ${pos + 1} de ${questions.length}`;
+      const q = questions[pos];
+      const test = _("test");
+      _("test_status").innerHTML = `Pregunta ${pos + 1} de ${questions.length}`;
 
-        if (!shuffledOptions[pos]) {
-            shuffledOptions[pos] = shuffleArray(q.options);
-        }
+      if (!shuffledOptions[pos]) {
+        shuffledOptions[pos] = shuffleArray(q.options);
+      }
 
-        let html = `<h3>${q.question}</h3>`;
-        shuffledOptions[pos].forEach(opt => {
-            const checked = userAnswers[pos] === opt ? "checked" : "";
-            html += `<label><input type="radio" name="choices" value="${opt}" ${checked}> ${opt}</label><br>`;
-        });
+      let html = `<h3>${q.question}</h3>`;
+      shuffledOptions[pos].forEach(opt => {
+        const checked = userAnswers[pos] === opt ? "checked" : "";
+        html += `<label><input type="radio" name="choices" value="${opt}" ${checked}> ${opt}</label><br>`;
+      });
 
-        test.innerHTML = html;
-        updateButtons();
+      test.innerHTML = html;
+      updateButtons();
     }
 
     function goNext() {
-        if (pos < questions.length - 1) pos++;
-        saveState();
-        renderQuestion();
+      if (pos < questions.length - 1) pos++;
+      saveState();
+      renderQuestion();
     }
 
     function goPrev() {
-        if (pos > 0) pos--;
-        saveState();
-        renderQuestion();
+      if (pos > 0) pos--;
+      saveState();
+      renderQuestion();
     }
 
     function goToQuestion(n) {
-        pos = n;
-        saveState();
-        renderQuestion();
+      pos = n;
+      saveState();
+      renderQuestion();
     }
 
     function saveAnswer(value) {
-        userAnswers[pos] = value;
-        saveState();
-        updateButtons();
+      userAnswers[pos] = value;
+      saveState();
+      updateButtons();
     }
 
     function updateButtons() {
-        const nav = _("question-nav");
-        nav.innerHTML = "";
-        for (let i = 0; i < questions.length; i++) {
-            const btn = document.createElement("button");
-            btn.className = "question-button";
-            if (userAnswers[i]) btn.classList.add("answered");
-            else btn.classList.add("unanswered");
-            btn.textContent = i + 1;
-            btn.onclick = () => goToQuestion(i);
-            nav.appendChild(btn);
-        }
+      const nav = _("question-nav");
+      nav.innerHTML = "";
+      for (let i = 0; i < questions.length; i++) {
+        const btn = document.createElement("button");
+        btn.className = "question-button";
+        if (userAnswers[i]) btn.classList.add("answered");
+        else btn.classList.add("unanswered");
+        btn.textContent = i + 1;
+        btn.onclick = () => goToQuestion(i);
+        nav.appendChild(btn);
+      }
     }
 
     function submitQuiz(forced = false) {
-        const unanswered = userAnswers.filter(a => a === null);
-        if (!forced && unanswered.length > 0) {
-            alert("Responde todas las preguntas antes de enviar.");
-            return;
-        }
-        clearInterval(timerInterval);
-        localStorage.clear();
+      const unanswered = userAnswers.filter(a => a === null || a === undefined);
+      if (!forced && unanswered.length > 0) {
+        alert("Responde todas las preguntas antes de enviar.");
+        return;
+      }
+      clearInterval(timerInterval);
+      localStorage.clear();
 
-        correct = userAnswers.filter((ans, i) => ans === questions[i].answer).length;
+      correct = userAnswers.filter((ans, i) => ans === questions[i].answer).length;
 
-        _("test").innerHTML = `<h2>Obtuviste ${correct} de ${questions.length} respuestas correctas.</h2>`;
-        _("test_status").innerHTML = "Ensayo Completado";
-        _("navigation-buttons").style.display = "none";
-        _("botonVolver").onclick = null;
+      _("test").innerHTML = `<h2>Obtuviste ${correct} de ${questions.length} respuestas correctas.</h2>`;
+      _("test_status").innerHTML = "Ensayo CM1 Completado";
+      _("navigation-buttons").style.display = "none";
+      _("botonVolver").onclick = null;
     }
 
     function startTimer() {
-        timerInterval = setInterval(() => {
-            secondsLeft--;
-            const minutes = Math.floor(secondsLeft / 60);
-            const seconds = secondsLeft % 60;
-            _("timer").textContent = `Tiempo restante: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-            saveState();
+      timerInterval = setInterval(() => {
+        secondsLeft--;
+        const minutes = Math.floor(secondsLeft / 60);
+        const seconds = secondsLeft % 60;
+        _("timer").textContent = `Tiempo restante: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        saveState();
 
-            if (secondsLeft <= 0) {
-                alert("¡Se acabó el tiempo! El ensayo se cerrará automáticamente.");
-                submitQuiz(true);
-            }
-        }, 1000);
+        if (secondsLeft <= 0) {
+          alert("¡Se acabó el tiempo! El ensayo se cerrará automáticamente.");
+          submitQuiz(true);
+        }
+      }, 1000);
     }
 
     function confirmarSalida() {
-        alert("No puedes volver al inicio mientras realizas el ensayo.");
-        return false;
+      alert("No puedes volver al inicio mientras realizas el ensayo.");
+      return false;
     }
 
     window.addEventListener("load", () => {
-        loadState();
-
-        _("test").addEventListener("change", e => {
-            if (e.target.name === "choices") saveAnswer(e.target.value);
-        });
-
-        renderQuestion();
-        startTimer();
+      loadState();
+      _("test").addEventListener("change", e => {
+        if (e.target.name === "choices") saveAnswer(e.target.value);
+      });
+      renderQuestion();
+      startTimer();
     });
-</script>
+  </script>
 </body>
 </html>

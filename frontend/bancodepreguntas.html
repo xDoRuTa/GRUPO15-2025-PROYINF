@@ -67,44 +67,73 @@
         <p>&copy; Plataforma de ensayos PAES - Red SIP. Acceso restringido a usuarios verificados.</p>
     </footer>
 
-    <script>
-        document.querySelector('#formularioPregunta').addEventListener('submit', function(event) {
-            event.preventDefault();
+<script>
+  document.querySelector('#formularioPregunta').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-            const pregunta = document.querySelector('#pregunta').value;
-            const materia = document.querySelector('#materia').value;
-            const alternativaA = document.querySelector('#alternativaA').value;
-            const alternativaB = document.querySelector('#alternativaB').value;
-            const alternativaC = document.querySelector('#alternativaC').value;
-            const alternativaD = document.querySelector('#alternativaD').value;
-            const correcta = document.querySelector('#alternativaCorrecta').value;
+    const pregunta = document.querySelector('#pregunta').value;
+    const materia = document.querySelector('#materia').value;
+    const alternativaA = document.querySelector('#alternativaA').value;
+    const alternativaB = document.querySelector('#alternativaB').value;
+    const alternativaC = document.querySelector('#alternativaC').value;
+    const alternativaD = document.querySelector('#alternativaD').value;
+    const correcta = document.querySelector('#alternativaCorrecta').value;
+    const imagenInput = document.querySelector('#imagen');
 
-            const datos = {
-                texto: pregunta,
-                materia: materia,
-                imagen: "",  // Podrías manejar esto con base64 o multipart/form-data
-                alternativaA,
-                alternativaB,
-                alternativaC,
-                alternativaD,
-                correcta
-            };
+    // Función para leer imagen como base64
+    function leerImagenComoBase64(file) {
+      return new Promise((resolve, reject) => {
+        const lector = new FileReader();
+        lector.onload = () => resolve(lector.result);
+        lector.onerror = reject;
+        lector.readAsDataURL(file); // DataURL incluye 'data:image/png;base64,...'
+      });
+    }
 
-            fetch('http://localhost:3000/api/preguntas', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(datos)
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert('Pregunta enviada correctamente');
-                document.querySelector('#formularioPregunta').reset();
-            })
-            .catch(err => {
-                alert('Error al enviar la pregunta');
-                console.error(err);
-            });
+    // Si hay imagen, leerla. Si no, enviar null
+    const archivo = imagenInput.files[0];
+    if (archivo) {
+      leerImagenComoBase64(archivo)
+        .then(imagenBase64 => {
+          enviarFormulario(imagenBase64);
+        })
+        .catch(err => {
+          alert('Error al leer la imagen');
+          console.error(err);
         });
-    </script>
+    } else {
+      enviarFormulario(null);
+    }
+
+    function enviarFormulario(imagenBase64) {
+      const datos = {
+        texto: pregunta,
+        materia: materia,
+        imagen: imagenBase64 || "", // puede ser null o cadena vacía
+        alternativaA,
+        alternativaB,
+        alternativaC,
+        alternativaD,
+        correcta
+      };
+
+      fetch('http://localhost:3000/api/preguntas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos)
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert('Pregunta enviada correctamente');
+        document.querySelector('#formularioPregunta').reset();
+      })
+      .catch(err => {
+        alert('Error al enviar la pregunta');
+        console.error(err);
+      });
+    }
+  });
+</script>
+
 </body>
 </html>
