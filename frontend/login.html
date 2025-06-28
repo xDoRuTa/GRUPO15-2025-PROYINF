@@ -4,24 +4,32 @@
   <meta charset="UTF-8">
   <title>Iniciar Sesión</title>
   <link rel="stylesheet" href="src/index.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <header>-
-    <h1>Inicio de Sesión</h1>
+  <header>
+    <div class="header-contenedor">
+      <h1>Inicio de Sesión</h1>
+      <a href="index.html" class="boton-volver">Volver a Inicio</a>
+    </div>
   </header>
 
-  <section id="login-section" style="text-align: center; margin: 50px auto; max-width: 400px;">
-    <form id="loginForm">
-      <h2>Accede a tu cuenta</h2>
-      <input type="email" name="email" placeholder="Correo electrónico" required style="padding: 10px; width: 100%; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc;">
-      <input type="password" name="password" placeholder="Contraseña" required style="padding: 10px; width: 100%; margin-bottom: 20px; border-radius: 5px; border: 1px solid #ccc;">
-      <button type="submit" class="boton">Ingresar</button>
-    </form>
-  </section>
+  <main>
+    <section class="tarjeta login-card">
+      <form id="loginForm" class="formulario-login">
+        <h2>Accede a tu cuenta</h2>
+
+        <input type="email" name="email" placeholder="Correo electrónico" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+
+        <button type="submit" class="boton">Ingresar</button>
+      </form>
+    </section>
+  </main>
 
   <footer>
-    <p>Plataforma de ensayos PAES - Red SIP</p>
+    <p>&copy; Plataforma de ensayos PAES - Red SIP</p>
   </footer>
 
   <script type="module" src="/src/auth/login.js"></script>
