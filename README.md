@@ -33,11 +33,6 @@ Este es el repositorio del *Grupo 15*, cuyos integrantes son:
 * Se requiere tambien cierta sincronizacion con los documentos a trabajar, así como bien una key para el correcto direccionamiento al sistema de cuentas. (Aunque la key nombrada está en el archivo llamado config.js)
 
 ## Instrucciones Página (Parte III)
-* Para el avance de este hito, se trabajaron 4 aspectos importantes:
-   * Se mejoraron aspectos respecto al frontend de la página.
-   * Se trabajó en conjunto con la base de datos.
-   * Se creó una sección en la que los docentes pueden revisar las preguntas disponibles y seleccionar preguntas para crear ensayos.
-   * Se enlazó la selección de preguntas con la creación de ensayos, es decir, se crean ensayos con las preguntas seleccionadas, las cuales incluyen imagenes, temporizador, puntaje final y su respectivo diseño llamativo.
 * Consideraciones importantes para el correcto funcionamiento de la página:
    * Para que todo funcione como se debe, es importante que las tablas de la base de datos se creen de manera correcta, para esto es importante tener en cuenta que estamos utilizando postgreSQL.
    * Al momento de subir preguntas, estas se pueden ver inmediatamente reflejadas en la página, es decir, se actualizan en el mismo instante en que se suben.
