@@ -31,3 +31,21 @@ Este es el repositorio del *Grupo 15*, cuyos integrantes son:
 * Para este nuevo avance, se usó firebase para la creación de un login básico, por tanto se recomienda tener ciertas nociones del mismo (aunque es bastante intuitivo la verdad)
 * Se requiere tener una cuenta de google para un mejor uso de la misma.
 * Se requiere tambien cierta sincronizacion con los documentos a trabajar, así como bien una key para el correcto direccionamiento al sistema de cuentas. (Aunque la key nombrada está en el archivo llamado config.js)
+
+## Instrucciones Página (Parte III)
+* Para el avance de este hito, se trabajaron 4 aspectos importantes:
+   * Se mejoraron aspectos respecto al frontend de la página.
+   * Se trabajó en conjunto con la base de datos.
+   * Se creó una sección en la que los docentes pueden revisar las preguntas disponibles y seleccionar preguntas para crear ensayos.
+   * Se enlazó la selección de preguntas con la creación de ensayos, es decir, se crean ensayos con las preguntas seleccionadas, las cuales incluyen imagenes, temporizador, puntaje final y su respectivo diseño llamativo.
+* Consideraciones importantes para el correcto funcionamiento de la página:
+   * Para que todo funcione como se debe, es importante que las tablas de la base de datos se creen de manera correcta, para esto es importante tener en cuenta que estamos utilizando postgreSQL.
+   * Al momento de subir preguntas, estas se pueden ver inmediatamente reflejadas en la página, es decir, se actualizan en el mismo instante en que se suben.
+   * Caso contrario al momento de crear ensayos, cuando se crean estos es necesario bajar y volver a subir el proyecto, ya que se reemplaza código y es necesario que este se actualice (Aspecto a mejorar para proximos avances).
+* Comandos de interés para utilizar en terminal:
+   * docker-compose down (Baja/cierra el proyecto).
+   * docker-compose up --build (Levanta/abre el proyecto).
+   * docker-compose exec db psql -U postgres midb (Acceder a la base de datos).
+        * \q (Salir de la base de datos).
+        * \p (Muestra el contenido actual de la base de datos / buffer de consultas).
+        * \d (Muestra una lista de todas las tablas, puede ser más especifico con \d (nombre de la tabla)).
