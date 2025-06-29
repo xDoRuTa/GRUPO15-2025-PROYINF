@@ -107,16 +107,18 @@ app.post('/api/crearEnsayo', (req, res) => {
     console.log(`📝 Usando plantilla: ${plantillaPath}`);
     console.log(`📄 Guardando ensayo generado en: ${destinoPath}`);
 
-    const preguntasJSON = preguntas.map(p => {
-        const opciones = [p.alternativa_a, p.alternativa_b, p.alternativa_c, p.alternativa_d];
-        const letras = ['A', 'B', 'C', 'D'];
-        const indiceCorrecto = letras.indexOf(p.correcta); // p.correcta es "A", "B", etc.
-        return {
-            question: p.texto,
-            options: opciones,
-            answer: opciones[indiceCorrecto] // <-- texto completo de la respuesta correcta
-        };
-    });
+const preguntasJSON = preguntas.map(p => {
+  const opciones = [p.alternativa_a, p.alternativa_b, p.alternativa_c, p.alternativa_d];
+  const letras = ['A', 'B', 'C', 'D'];
+  const indiceCorrecto = letras.indexOf(p.correcta);
+
+  return {
+    question: p.texto,
+    options: opciones,
+    answer: opciones[indiceCorrecto],
+    image: p.imagen?.startsWith('data:image') ? p.imagen : (p.imagen ? `data:image/png;base64,${p.imagen}` : null)
+  };
+});
 
     fs.readFile(plantillaPath, 'utf8', (err, plantilla) => {
         if (err) {
