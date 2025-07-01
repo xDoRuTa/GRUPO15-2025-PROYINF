@@ -21,7 +21,7 @@ Este es el repositorio del *Grupo 15*, cuyos integrantes son:
     * Carpeta Backend
     * docker.compose.yml
 * Posteriormente es importante tener en cuenta que el proyecto está implementado en el entorno virtual de Ubuntu, con el uso de WSL.
-* También es importante que se utilice la versión 2 de Ubuntu, para verificar la versión, se debe ingresar el siguiente comando en la PowerShell "--list --verbose", y en caso de ser necesario utilizar "--set-version Ubuntu 2" para cambiar la versión de Ubuntu a la correspondiente para la ejecución del proyecto.
+* También es importante que se utilice la versión 2 de Ubuntu, para verificar la versión, se debe ingresar el siguiente comando en la PowerShell (de Windows) "wsl --list --verbose", y en caso de ser necesario utilizar "--set-version Ubuntu 2" para cambiar la versión de Ubuntu a la correspondiente para la ejecución del proyecto.
 * Debe instalarse la aplicación "Docker Desktop", una vez dentro de la misma, se debe seguir el siguiente patrón de instrucciones: Settings -> Resources -> WSL integration -> "habilitar Ubuntu".
 * Es importante tener docker y docker compose en el dispositivo (En el entorno de programación, en nuestro caso, dentro de la terminal de VSC pero conectada a WSL), esto para la creación de los contenedores.
 * Tambien se requiere vite y node.js, instalando todo lo necesario para ello.
