@@ -4,6 +4,7 @@ Este es el repositorio del *Grupo 4*, cuyos integrantes son:
 * Domingo Ruiz-Tagle - 202273648-8
 * Sebastian Jaña - 202273618-6
 * Ignacio Casanova - 202273631-3
+* 
 (Se mantienen los mismos integrantes del semestre pasado)
 
 ## Wiki
