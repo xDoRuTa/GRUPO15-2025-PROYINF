@@ -49,3 +49,11 @@ Este es el repositorio del *Grupo 4*, cuyos integrantes son:
         * \q (Salir de la base de datos).
         * \p (Muestra el contenido actual de la base de datos / buffer de consultas).
         * \d (Muestra una lista de todas las tablas, puede ser más especifico con \d (nombre de la tabla)).
+
+## Identificación Proyecto Base 2025-1
+* El proyecto que se realizará durante este semestre 2025-2 corresponde a la continuación del establecido durante el primer semestre de este mismo año, el cual consiste en la realización de una plataforma "interactiva" con fines educativos, la cual tiene una estricta relación con la prueba de admisión universitaria, con el fin de poder brindar diversas instancias de práctica para los alumnos de enseñanza media, los cuales se encuentran a escazos momentos rendir la misma para poder optar a la educación superior.
+* Esta plataforma está pensada para que los mismos docentes que les hacen clases a estos alumnos sean los encargados de la creación de los ensayos, con el fin de que puedan reforzar de mejor manera las dificultades de sus alumnos. Y es debido a esto que la misma cuenta con las siguientes caracteristicas:
+   * Verificación de cuentas, lo que conlleva a diferentes vistas según corresponda a su debido "rol". (Profesores, Alumnos, Administrador).
+   * Banco de preguntas, el cual permite el almacenamiento de preguntas separadas en sus correspondientes materias.
+   * Creación de preguntas.
+   * Realización de ensayos.
