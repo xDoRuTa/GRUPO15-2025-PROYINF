@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<script src="src/pregunta_libre.js"></script>    
+<head>
+  <meta charset="UTF-8" />
+  <title>Pregunta libre</title>
+  <link rel="stylesheet" href="src/index.css" />
+</head>
+<body>
+  <header>
+    <h1>Pregunta libre</h1>
+    <a class="boton-volver" href="ensayos.html">Volver a Ensayos</a>
+  </header>
+
+  <main id="contenedor"></main>
+
+  <script>
+    const $c = document.getElementById('contenedor');
+
+    async function cargarPregunta() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+
+      const url = id
+        ? `/api/preguntas/${id}`
+        : `/api/preguntas/libres/random`;
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Error de red');
+        const q = await res.json();
+
+        // Render mínimo — adapta a tu modelo (enunciado, alternativas, etc.)
+        $c.innerHTML = `
+          <article class="tarjeta">
+            <h2>${q.materia ? `[${q.materia}] ` : ''}${q.titulo || 'Pregunta'}</h2>
+            <p>${q.enunciado}</p>
+
+            ${Array.isArray(q.alternativas) ? `
+              <form id="form-respuesta">
+                ${q.alternativas.map((alt, i) => `
+                  <label style="display:block;margin:.25rem 0;">
+                    <input type="radio" name="resp" value="${i}" required> ${alt}
+                  </label>`).join('')}
+                <button type="submit">Enviar respuesta</button>
+              </form>
+            ` : `
+              <form id="form-respuesta">
+                <textarea name="resp_texto" rows="4" placeholder="Escribe tu respuesta..." required></textarea>
+                <button type="submit">Enviar respuesta</button>
+              </form>
+            `}
+
+            <div style="margin-top:1rem;display:flex;gap:.5rem;">
+              <button id="otra">Otra pregunta libre</button>
+            </div>
+          </article>
+        `;
+
+        // Enviar respuesta (ajusta endpoint/forma según tu backend)
+        document.getElementById('form-respuesta').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const payload = {
+            pregunta_id: q.id,
+            respuesta: form.resp?.value ?? form.resp_texto?.value ?? ''
+          };
+          const r = await fetch(`/api/respuestas`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+          });
+          if (r.ok) {
+            alert('Respuesta registrada');
+          } else {
+            alert('No se pudo registrar la respuesta');
+          }
+        });
+
+        // Otra al azar
+        document.getElementById('otra').addEventListener('click', () => {
+          window.location.href = 'pregunta_libre.html'; // vuelve a pedir /random
+        });
+
+      } catch (err) {
+        $c.innerHTML = `<p>No se pudo cargar una pregunta libre.</p>`;
+      }
+    }
+
+    cargarPregunta();
+  </script>
+</body>
+</html>

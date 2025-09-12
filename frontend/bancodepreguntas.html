@@ -1,139 +1,148 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Banco de preguntas</title>
-    <link rel="stylesheet" href="src/index.css">
-    <link rel="stylesheet" href="src/bancodepreguntas.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Banco de preguntas</title>
+  <link rel="stylesheet" href="src/index.css">
+  <link rel="stylesheet" href="src/bancodepreguntas.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <header>
+    <div class="header-contenedor">
+      <h1>Banco de Preguntas</h1>
+      <a href="index.html" class="boton-volver">Volver a Inicio</a>
+    </div>
+  </header>
 
-    <header>
-        <div class="header-contenedor">
-            <h1>Banco de Preguntas</h1>
-            <a href="index.html" class="boton-volver">Volver a Inicio</a>
-        </div>
-    </header>
+  <main>
+    <section class="tarjeta">
+      <form id="formularioPregunta" enctype="multipart/form-data">
+        <h2>Formulario de Nueva Pregunta</h2>
 
-    <main>
-        <section class="tarjeta">
-            <form id="formularioPregunta">
-                <h2>Formulario de Nueva Pregunta</h2>
+        <label for="pregunta">1 - Pregunta:</label>
+        <!-- name debe ser enunciado -->
+        <textarea id="pregunta" name="enunciado" rows="4" required></textarea>
 
-                <label for="pregunta">1 - Pregunta:</label>
-                <textarea id="pregunta" name="pregunta" rows="4" required></textarea>
+        <label for="materia">2 - Materia:</label>
+        <select id="materia" name="materia" required>
+          <option value="">Seleccione una materia</option>
+          <option value="CL">Competencia Lectora</option>
+          <option value="CM1">Competencia Matemática 1</option>
+          <option value="CM2">Competencia Matemática 2</option>
+          <option value="HCS">Historia y Ciencias Sociales</option>
+          <option value="C">Ciencias</option>
+        </select>
 
-                <label for="materia">2 - Materia:</label>
-                <select id="materia" name="materia" required>
-                    <option value="">Seleccione una materia</option>
-                    <option value="CL">Competencia Lectora</option>
-                    <option value="CM1">Competencia Matemática 1</option>
-                    <option value="CM2">Competencia Matemática 2</option>
-                    <option value="HCS">Historia y Ciencias Sociales</option>
-                    <option value="C">Ciencias</option>
-                </select>
+        <label for="imagen">3 - Imagen de referencia (opcional):</label>
+        <!-- si usas multer.single('imagen'), el name DEBE ser 'imagen' -->
+        <input type="file" id="imagen" name="imagen" accept="image/*">
 
-                <label for="imagen">3 - Imagen de referencia (opcional):</label>
-                <input type="file" id="imagen" name="imagen" accept="image/*">
+        <label for="alternativaA">4 - Alternativa A:</label>
+        <input type="text" id="alternativaA" name="alternativaA" required>
 
-                <label for="alternativaA">4 - Alternativa A:</label>
-                <input type="text" id="alternativaA" name="alternativaA" required>
+        <label for="alternativaB">5 - Alternativa B:</label>
+        <input type="text" id="alternativaB" name="alternativaB" required>
 
-                <label for="alternativaB">5 - Alternativa B:</label>
-                <input type="text" id="alternativaB" name="alternativaB" required>
+        <label for="alternativaC">6 - Alternativa C:</label>
+        <input type="text" id="alternativaC" name="alternativaC" required>
 
-                <label for="alternativaC">6 - Alternativa C:</label>
-                <input type="text" id="alternativaC" name="alternativaC" required>
+        <label for="alternativaD">7 - Alternativa D:</label>
+        <input type="text" id="alternativaD" name="alternativaD" required>
 
-                <label for="alternativaD">7 - Alternativa D:</label>
-                <input type="text" id="alternativaD" name="alternativaD" required>
+        <label for="alternativaCorrecta">8 - Alternativa correcta:</label>
+        <!-- nombre que espera el backend: 'correcta' -->
+        <select id="alternativaCorrecta" name="correcta" required>
+          <option value="">Seleccione una opción</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+        </select>
 
-                <label for="alternativaCorrecta">8 - Alternativa correcta:</label>
-                <select id="alternativaCorrecta" name="alternativaCorrecta" required>
-                    <option value="">Seleccione una opción</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
-                    <option value="D">D</option>
-                </select>
+        <label for="libre">9 - ¿La pregunta es libre?</label>
+        <!-- many backends esperan is_libre boolean -->
+        <select id="libre" name="is_libre" required>
+          <option value="">Seleccione una opción</option>
+          <option value="true">Sí</option>
+          <option value="false">No</option>
+        </select>
 
-                <button id="btnAgregarPregunta" type="submit" class="boton">Agregar Pregunta</button>
-            </form>
-        </section>
-    </main>
+        <button id="btnAgregarPregunta" type="submit" class="boton">Agregar Pregunta</button>
+      </form>
+    </section>
+  </main>
 
-    <footer>
-        <p>&copy; Plataforma de ensayos PAES - Red SIP. Acceso restringido a usuarios verificados.</p>
-    </footer>
+  <footer>
+    <p>&copy; Plataforma de ensayos PAES - Red SIP. Acceso restringido a usuarios verificados.</p>
+  </footer>
 
 <script>
-  document.querySelector('#formularioPregunta').addEventListener('submit', function(event) {
-    event.preventDefault();
+document.querySelector('#formularioPregunta').addEventListener('submit', async (event) => {
+  event.preventDefault();
 
-    const pregunta = document.querySelector('#pregunta').value;
-    const materia = document.querySelector('#materia').value;
-    const alternativaA = document.querySelector('#alternativaA').value;
-    const alternativaB = document.querySelector('#alternativaB').value;
-    const alternativaC = document.querySelector('#alternativaC').value;
-    const alternativaD = document.querySelector('#alternativaD').value;
-    const correcta = document.querySelector('#alternativaCorrecta').value;
-    const imagenInput = document.querySelector('#imagen');
+  const texto         = document.querySelector('#pregunta').value.trim();
+  const materia       = document.querySelector('#materia').value;
+  const alternativaA  = document.querySelector('#alternativaA').value.trim();
+  const alternativaB  = document.querySelector('#alternativaB').value.trim();
+  const alternativaC  = document.querySelector('#alternativaC').value.trim();
+  const alternativaD  = document.querySelector('#alternativaD').value.trim();
+  const correcta      = document.querySelector('#alternativaCorrecta').value;
 
-    // Función para leer imagen como base64
-    function leerImagenComoBase64(file) {
-      return new Promise((resolve, reject) => {
-        const lector = new FileReader();
-        lector.onload = () => resolve(lector.result);
-        lector.onerror = reject;
-        lector.readAsDataURL(file); // DataURL incluye 'data:image/png;base64,...'
-      });
-    }
+  // Tu select muestra "Sí/No" → normalizamos a booleano
+  const libreRaw = document.querySelector('#libre').value;
+  const libre = (String(libreRaw).toLowerCase() === 'si' || String(libreRaw).toLowerCase() === 'sí' || String(libreRaw) === 'true');
 
-    // Si hay imagen, leerla. Si no, enviar null
-    const archivo = imagenInput.files[0];
-    if (archivo) {
-      leerImagenComoBase64(archivo)
-        .then(imagenBase64 => {
-          enviarFormulario(imagenBase64);
-        })
-        .catch(err => {
-          alert('Error al leer la imagen');
-          console.error(err);
-        });
-    } else {
-      enviarFormulario(null);
-    }
+  const imagenInput = document.querySelector('#imagen');
+  const archivo = imagenInput.files?.[0] ?? null;
 
-    function enviarFormulario(imagenBase64) {
-      const datos = {
-        texto: pregunta,
-        materia: materia,
-        imagen: imagenBase64 || "", // puede ser null o cadena vacía
-        alternativaA,
-        alternativaB,
-        alternativaC,
-        alternativaD,
-        correcta
-      };
-
-      fetch('http://localhost:3000/api/preguntas', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(datos)
-      })
-      .then(res => res.json())
-      .then(data => {
-        alert('Pregunta enviada correctamente');
-        document.querySelector('#formularioPregunta').reset();
-      })
-      .catch(err => {
-        alert('Error al enviar la pregunta');
-        console.error(err);
-      });
-    }
+  const leerImagenComoBase64 = (file) => new Promise((resolve, reject) => {
+    try {
+      const fr = new FileReader();
+      fr.onload = () => resolve(fr.result);
+      fr.onerror = () => reject(new Error('No se pudo leer el archivo de imagen.'));
+      fr.readAsDataURL(file);
+    } catch (e) { reject(e); }
   });
-</script>
 
+  let imagen = null;
+  try {
+    if (archivo) {
+      if (archivo.size > 12 * 1024 * 1024) {
+        alert('La imagen supera 12MB. Reduce el tamaño o envíala sin imagen.');
+        return;
+      }
+      imagen = await leerImagenComoBase64(archivo);
+    }
+  } catch (e) {
+    console.error('Lectura de imagen fallida:', e);
+    alert('No se pudo leer la imagen. Intenta con otra o envía sin imagen.');
+    return;
+  }
+
+  const payload = { texto, materia, imagen, alternativaA, alternativaB, alternativaC, alternativaD, correcta, libre };
+
+  try {
+    const res = await fetch('http://localhost:3000/api/preguntas', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const bodyText = await res.text();
+    if (!res.ok) {
+      console.error('Respuesta del servidor:', bodyText);
+      alert('Error al guardar: ' + bodyText);
+      return;
+    }
+
+    alert('Pregunta enviada correctamente');
+    document.querySelector('#formularioPregunta').reset();
+  } catch (err) {
+    console.error('Fallo de red/CORS u otro error antes del fetch OK:', err);
+    alert('Error al leer/enviar la pregunta');
+  }
+});
+</script>
 </body>
 </html>

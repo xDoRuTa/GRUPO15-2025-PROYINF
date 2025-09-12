@@ -1,38 +1,143 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Ensayos</title>
-    <link rel="stylesheet" href="src/index.css">
-    <link rel="stylesheet" href="src/ensayos.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Ensayos</title>
+  <link rel="stylesheet" href="src/index.css" />
+  <link rel="stylesheet" href="src/ensayos.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
 </head>
 <body>
-
-    <header>
-        <div class="header-contenedor">
-            <h1>Ensayos</h1>
-            <a href="index.html" class="boton-volver">Volver a Inicio</a>
-        </div>
-    </header>
-
-<main>
-  <section class="tarjeta">
-    <p class="texto-centrado">Elige el ensayo que deseas realizar:</p>
-    <div class="grid-ensayos">
-      <a href="ensayo_CL.html" class="card-ensayo">📖<span>Competencia Lectora</span></a>
-      <a href="ensayo_CM1.html" class="card-ensayo">➗<span>Matemática 1</span></a>
-      <a href="ensayo_CM2.html" class="card-ensayo">📐<span>Matemática 2</span></a>
-      <a href="ensayo_HCS.html" class="card-ensayo">🏛️<span>Historia y Cs. Sociales</span></a>
-      <a href="ensayo_C.html" class="card-ensayo">🔬<span>Ciencias</span></a>
+  <header>
+    <div class="header-contenedor">
+      <h1>Ensayos</h1>
+      <a href="index.html" class="boton-volver">Volver a Inicio</a>
     </div>
-  </section>
-</main>
+  </header>
 
+  <main class="layout-ensayos">
+    <!-- Columna izquierda: ensayos -->
+    <section class="tarjeta">
+      <p class="texto-centrado">Elige el ensayo que deseas realizar:</p>
+      <div class="grid-ensayos">
+        <a href="ensayo_CL.html" class="card-ensayo">📖<span>Competencia Lectora</span></a>
+        <a href="ensayo_CM1.html" class="card-ensayo">➗<span>Matemática 1</span></a>
+        <a href="ensayo_CM2.html" class="card-ensayo">📐<span>Matemática 2</span></a>
+        <a href="ensayo_HCS.html" class="card-ensayo">🏛️<span>Historia y Cs. Sociales</span></a>
+        <a href="ensayo_C.html" class="card-ensayo">🔬<span>Ciencias</span></a>
+      </div>
+    </section>
 
-    <footer>
-        <p>&copy; Plataforma de ensayos PAES - Red SIP</p>
-    </footer>
+    <!-- Columna derecha: preguntas libres (funciona acá mismo) -->
+    <aside class="tarjeta bloque-preguntas-libres">
+      <h2>Preguntas libres</h2>
+      <p class="ayuda">Recibe una pregunta aleatoria entre las marcadas como “libre”.</p>
 
+      <div class="acciones" style="display:flex; gap:8px; margin-bottom:10px;">
+        <button id="pl-nueva" class="btn-primario" type="button">Obtener pregunta</button>
+        <button id="pl-mostrar" class="btn-secundario" type="button">Mostrar solución</button>
+      </div>
+
+      <small id="pl-estado" class="ayuda"></small>
+
+      <!-- Contenedor donde se renderiza la pregunta -->
+      <div id="pl-contenido" class="pregunta"></div>
+    </aside>
+  </main>
+
+  <footer>
+    <p>&copy; Plataforma de ensayos PAES - Red SIP</p>
+  </footer>
+
+  <script type="module">
+    // Ajusta si tu backend expone el prefijo en otro camino/puerto (usa proxy de Vite si hace falta)
+    const API_BASE = '/api/preguntas';
+
+    const $estado = document.getElementById('pl-estado');
+    const $contenido = document.getElementById('pl-contenido');
+    const $btnNueva = document.getElementById('pl-nueva');
+    const $btnMostrar = document.getElementById('pl-mostrar');
+
+    function opcionesDe(p) {
+      if (Array.isArray(p.opciones)) return p.opciones.filter(Boolean);
+      const keys = ['opcion_a','opcion_b','opcion_c','opcion_d','opcion_e'];
+      return keys.map(k => p[k]).filter(Boolean);
+    }
+
+    async function cargarPreguntaLibre() {
+      $estado.textContent = '';
+      $contenido.innerHTML = '<p>Cargando…</p>';
+      $btnMostrar.dataset.visible = '0';
+
+      try {
+        const r = await fetch(`${API_BASE}/libres/azar`, { credentials: 'include' });
+        if (!r.ok) {
+          $contenido.innerHTML = '<p class="error">⚠️ No hay preguntas libres o el servidor no respondió correctamente.</p>';
+          return;
+        }
+        const p = await r.json();
+
+        const enunciado = p.enunciado || p.pregunta || '(sin enunciado)';
+        const opciones = opcionesDe(p);
+
+        // guardamos respuesta para el botón "Mostrar solución"
+        $contenido.dataset.respuesta = p.respuesta_correcta ?? p.correcta ?? '';
+
+        $contenido.innerHTML = `
+          <p class="enunciado" style="font-weight:600; margin-bottom:8px;">${enunciado}</p>
+          ${opciones.length ? `<ol class="opciones" type="A" style="margin-left:18px;">
+            ${opciones.map(o => `<li>${o}</li>`).join('')}
+          </ol>` : ''}
+          ${p.materia ? `<p class="meta" style="opacity:.8; margin-top:8px;"><strong>Materia:</strong> ${p.materia}</p>` : ''}
+        `;
+      } catch (e) {
+        $contenido.innerHTML = `<p class="error">⚠️ Error cargando la pregunta: ${e.message}</p>`;
+      }
+    }
+
+    function mostrarSolucion() {
+      if ($btnMostrar.dataset.visible === '1') return;
+      const resp = $contenido.dataset.respuesta;
+      const p = document.createElement('p');
+      p.className = 'respuesta';
+      p.style.marginTop = '10px';
+      p.style.fontStyle = 'italic';
+      p.textContent = resp ? `Respuesta: ${resp}` : 'Respuesta no disponible.';
+      $contenido.appendChild(p);
+      $btnMostrar.dataset.visible = '1';
+    }
+
+    // (Opcional) Si implementaste un endpoint de existencia, deshabilita si no hay stock.
+    async function chequearDisponibilidad() {
+      try {
+        const r = await fetch(`${API_BASE}/libres/exists`, { credentials: 'include' });
+        if (r.status === 204) {
+          $btnNueva.disabled = true;
+          $estado.textContent = 'Por ahora no hay preguntas libres disponibles.';
+          return false;
+        }
+        if (!r.ok) return true;
+        const data = await r.json().catch(() => ({}));
+        if (typeof data.count === 'number' && data.count === 0) {
+          $btnNueva.disabled = true;
+          $estado.textContent = 'Por ahora no hay preguntas libres disponibles.';
+          return false;
+        }
+      } catch (_) { /* no romper la UI si no existe el endpoint */ }
+      return true;
+    }
+
+    $btnNueva.addEventListener('click', cargarPreguntaLibre);
+    $btnMostrar.addEventListener('click', mostrarSolucion);
+
+    // Carga inicial
+    (async () => {
+      const ok = await chequearDisponibilidad();
+      if (ok) {
+        // Si quieres que aparezca una apenas se abre la vista, descomenta:
+        // await cargarPreguntaLibre();
+      }
+    })();
+  </script>
 </body>
 </html>
