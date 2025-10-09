@@ -12,10 +12,10 @@ Este es el repositorio del *Grupo 4*, cuyos integrantes son:
 
 ## Multimedia
 * [🎥- Video Presentación Cliente](https://aula.usm.cl/mod/resource/view.php?id=6322574)
-* [🎥- Video Prototipo - Hito 3](https://youtu.be/MSrKbSECel8)
+* [🎥- Video Prototipo - Hito 3 (2025-1)](https://youtu.be/MSrKbSECel8)
 * [🌐- Evidencia Uso Firebase](https://github.com/xDoRuTa/GRUPO15-2025-PROYINF/discussions/8)
-* [🌐- Consideraciones Hito 5](https://github.com/xDoRuTa/GRUPO15-2025-PROYINF/discussions/10)
-* [🎥- Video Presentacion - Hito 5](https://youtu.be/Zz3AJAsyoBA)
+* [🌐- Consideraciones Hito 5 (2025-1)](https://github.com/xDoRuTa/GRUPO15-2025-PROYINF/discussions/10)
+* [🎥- Video Presentacion - Hito 5 (2025-1)](https://youtu.be/Zz3AJAsyoBA)
 ## Instrucciones Página
 
 * Hay que asegurarse de tener todos los archivos que estan en este github que son:
