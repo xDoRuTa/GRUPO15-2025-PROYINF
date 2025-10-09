@@ -1,84 +1,53 @@
-// GET /api/preguntas/libres/random
-app.get('/api/preguntas/libres/random', async (req, res) => {
+const $c = document.getElementById('contenedor');
+
+async function cargarPregunta() {
   try {
-    const row = await db.oneOrNone(`
-      SELECT id, titulo, enunciado, materia, alternativas_json
-      FROM preguntas
-      WHERE is_libre = TRUE
-      ORDER BY RANDOM()  -- RAND() si usas MySQL
-      LIMIT 1
-    `);
+    const res = await fetch('/api/preguntas/libres/random'); // ruta relativa, mismo host/puerto
+    if (!res.ok) throw new Error('No se pudo obtener la pregunta');
+    const q = await res.json();
 
-    if (!row) return res.status(404).json({error: 'No hay preguntas libres'});
+    $c.innerHTML = `
+      <article class="tarjeta">
+        <h2>${q.materia ? `[${q.materia}] ` : ''}${q.texto || 'Pregunta'}</h2>
+        ${q.imagen ? `<img src="${q.imagen}" alt="Imagen de la pregunta" style="max-width:100%; margin:1rem 0;">` : ''}
+        <form id="form-respuesta">
+          <textarea name="resp_texto" rows="4" placeholder="Escribe tu respuesta..." required></textarea>
+          <button type="submit">Enviar respuesta</button>
+        </form>
+        <div style="margin-top:1rem;">
+          <button id="otra">Otra pregunta libre</button>
+        </div>
+      </article>
+    `;
 
-    const q = {
-      id: row.id,
-      titulo: row.titulo,
-      enunciado: row.enunciado,
-      materia: row.materia,
-      alternativas: row.alternativas_json ? JSON.parse(row.alternativas_json) : null
-    };
-    res.json(q);
-  } catch (e) {
-    res.status(500).json({error: 'Error obteniendo pregunta libre'});
-  }
-});
+    // Enviar respuesta
+    document.getElementById('form-respuesta').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const respuesta = form.resp_texto.value.trim();
 
-// GET /api/preguntas/:id (opcional, si usas ?id=)
-app.get('/api/preguntas/:id', async (req, res) => {
-  const { id } = req.params;
-  const row = await db.oneOrNone(`
-    SELECT id, titulo, enunciado, materia, alternativas_json
-    FROM preguntas
-    WHERE id = $1
-  `, [id]);
-  if (!row) return res.sendStatus(404);
-  res.json({
-    id: row.id,
-    titulo: row.titulo,
-    enunciado: row.enunciado,
-    materia: row.materia,
-    alternativas: row.alternativas_json ? JSON.parse(row.alternativas_json) : null
-  });
-});
+      const r = await fetch('/api/respuestas', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ pregunta_id: q.id, respuesta })
+      });
 
-// POST /api/respuestas
-app.post('/api/respuestas', async (req, res) => {
-  const { pregunta_id, respuesta } = req.body;
-  // inserta y asocia al alumno autenticado (si ya tienes auth)
-  await db.none(`
-    INSERT INTO respuestas (pregunta_id, respuesta, created_at)
-    VALUES ($1, $2, NOW())
-  `, [pregunta_id, respuesta]);
-  res.sendStatus(201);
-});
+      if (r.ok) {
+        alert('Respuesta registrada');
+        form.reset();
+      } else {
+        alert('No se pudo registrar la respuesta');
+      }
+    });
 
-const express = require('express');
-const router = express.Router();
-const multer = require('multer');
-const upload = multer();
-const { Pregunta } = require('../models/Pregunta'); // ajusta ruta
+    // Pedir otra pregunta
+    document.getElementById('otra').addEventListener('click', () => cargarPregunta());
 
-router.post('/', upload.single('imagen'), async (req, res) => {
-  try {
-    const body = req.body || {};
-    if (Object.keys(body).length === 0 && !req.file) {
-      return res.status(400).json({ error: 'Cuerpo vacío. Revisa Content-Type / parser.' });
-    }
-
-    if (req.file && !body.imagen) {
-      body.imagen = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
-    }
-
-    const p = new Pregunta(body);
-    p.validarPregunta();
-
-    // TODO: guarda en DB con p.toJSON()
-    res.status(201).json({ ok: true, data: p.toJSON() });
   } catch (err) {
-    console.error('Error al guardar pregunta:', err);
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    $c.innerHTML = `<p>⚠️ No hay preguntas libres o el servidor no respondió correctamente.</p>`;
   }
-});
+}
 
-module.exports = router;
+// Cargar la primera pregunta al abrir la página
+cargarPregunta();
