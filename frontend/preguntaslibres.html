@@ -3,16 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <title>Pregunta Libre</title>
-  <link rel="stylesheet" href="src/index.css">
+  <link rel="stylesheet" href="/src/index.css">
 </head>
 <body>
   <header>
     <h1>Pregunta Libre</h1>
-    <a class="boton-volver" href="ensayos.html">Volver a Ensayos</a>
+    <a class="boton-volver" href="index.html">Volver a Inicio</a>
   </header>
 
   <main id="contenedor"></main>
 
-  <script src="src/preguntaslibres.js"></script>
+  <script type="module">
+    const contenedor = document.getElementById('contenedor');
+    const BACKEND_URL = 'http://localhost:3000'; // Ajusta según tu Docker
+
+    async function cargarPregunta() {
+      contenedor.innerHTML = '<p>Cargando pregunta libre...</p>';
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/preguntas/libres/random`);
+        if (!res.ok) throw new Error('No se pudo obtener la pregunta');
+        const q = await res.json();
+
+        const texto = q.titulo || q.enunciado || 'Pregunta';
+
+        contenedor.innerHTML = `
+          <article class="tarjeta">
+            <h2>${q.materia ? `[${q.materia}] ` : ''}${texto}</h2>
+            ${q.imagen ? `<img src="${q.imagen}" alt="Imagen de referencia" style="max-width:100%; margin:1rem 0;">` : ''}
+            <form id="form-respuesta">
+              <textarea name="resp_texto" rows="4" placeholder="Escribe tu respuesta..." required></textarea>
+              <button type="submit">Enviar respuesta</button>
+            </form>
+            <div style="margin-top:1rem;">
+              <button id="otra">Otra pregunta libre</button>
+            </div>
+          </article>
+        `;
+
+        document.getElementById('form-respuesta').addEventListener('submit', async e => {
+          e.preventDefault();
+          const respuesta = e.target.resp_texto.value.trim();
+          if (!respuesta) return alert('Debes escribir una respuesta.');
+
+          try {
+            const r = await fetch(`${BACKEND_URL}/api/respuestas`, {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({pregunta_id: q.id, respuesta})
+            });
+            if (!r.ok) throw new Error('No se pudo registrar la respuesta');
+            alert('Respuesta registrada');
+            e.target.reset();
+          } catch(err) {
+            alert(err.message);
+          }
+        });
+
+        document.getElementById('otra').addEventListener('click', cargarPregunta);
+
+      } catch(err) {
+        console.error(err);
+        contenedor.innerHTML = '<p>⚠️ No se pudo cargar la pregunta libre</p>';
+      }
+    }
+
+    // Carga inicial
+    cargarPregunta();
+  </script>
 </body>
 </html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mis cursos de Classroom</title>
+  <link rel="stylesheet" href="src/index.css" />
+</head>
+<body>
+  <header>
+    <div class="header-contenedor">
+      <h1>Google Classroom</h1>
+      <a href="index.html" class="boton-volver">Inicio</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="tarjeta">
+      <h2>Cursos</h2>
+      <p id="estado">Cargando…</p>
+      <ul id="lista" style="display:grid;gap:10px;list-style:none;padding-left:0;"></ul>
+    </section>
+  </main>
+
+  <script>
+    const API = 'http://localhost:3000';
+
+    async function cargarCursos() {
+      try {
+        const res = await fetch(`${API}/api/classroom/courses`, { credentials: 'include' });
+        if (res.status === 401) {
+          // No hay sesión de Google: manda al login OAuth del backend
+          document.getElementById('estado').innerText = 'No conectado. Redirigiendo a Google…';
+          window.location.href = `${API}/auth/google`;
+          return;
+        }
+        if (!res.ok) throw new Error('Error al obtener cursos');
+
+        const cursos = await res.json();
+        document.getElementById('estado').innerText = cursos.length ? '' : 'No hay cursos activos.';
+        const ul = document.getElementById('lista');
+        ul.innerHTML = '';
+
+        cursos.forEach(c => {
+          const li = document.createElement('li');
+          li.className = 'tarjeta';
+          li.innerHTML = `
+            <strong>${c.name || 'Sin nombre'}</strong> ${c.section ? `— ${c.section}` : ''}<br/>
+            <small>ID: ${c.id}</small><br/>
+            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="boton" data-id="${c.id}" data-act="work">Ver tareas</button>
+              <button class="boton" data-id="${c.id}" data-act="students">Ver estudiantes</button>
+            </div>
+            <pre id="out-${c.id}" style="white-space:pre-wrap;background:#111;padding:8px;border-radius:6px;display:none;"></pre>
+          `;
+          ul.appendChild(li);
+        });
+
+        ul.addEventListener('click', async (e) => {
+          if (e.target.tagName !== 'BUTTON') return;
+          const id = e.target.getAttribute('data-id');
+          const act = e.target.getAttribute('data-act');
+          const out = document.getElementById(`out-${id}`);
+          out.style.display = 'block';
+          out.textContent = 'Cargando…';
+
+          const url = act === 'work'
+            ? `${API}/api/classroom/courses/${id}/courseWork`
+            : `${API}/api/classroom/courses/${id}/students`;
+
+          const r = await fetch(url, { credentials: 'include' });
+          out.textContent = r.ok ? JSON.stringify(await r.json(), null, 2) : `Error ${r.status}`;
+        });
+
+      } catch (err) {
+        document.getElementById('estado').innerText = 'Ocurrió un error.';
+        console.error(err);
+      }
+    }
+
+    cargarCursos();
+  </script>
+</body>
+</html>

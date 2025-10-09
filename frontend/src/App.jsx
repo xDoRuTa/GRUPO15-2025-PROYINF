@@ -4,6 +4,8 @@ import Login from './auth/login';
 import Register from './auth/register';
 import Logout from './auth/logout';
 import { useAuth } from './auth/useauth';
+import ClassroomConnect from './components/ClassroomConnect.jsx';
+import ClassroomCourses from './components/ClassroomCourses.jsx';
 
 function App() {
   const user = useAuth();
@@ -19,7 +21,10 @@ function App() {
         ) : (
           <>
             <Route path="/logout" element={<Logout />} />
-            {/* Aquí irían otras rutas si usaras componentes jsx */}
+
+            {/* 🔽 NUEVAS RUTAS Classroom */}
+            <Route path="/classroom" element={<ClassroomConnect />} />
+            <Route path="/classroom/connected" element={<ClassroomCourses />} />
           </>
         )}
       </Routes>
