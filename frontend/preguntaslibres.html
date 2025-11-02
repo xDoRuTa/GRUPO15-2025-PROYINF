@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Pregunta Libre</title>
   <link rel="stylesheet" href="/src/index.css">
+  <!-- ¡NUEVO! Enlazamos la hoja de estilos que acabamos de crear -->
+  <link rel="stylesheet" href="/src/preguntaslibres.css">
 </head>
 <body>
   <header>
@@ -26,43 +28,105 @@
         const q = await res.json();
 
         const texto = q.titulo || q.enunciado || 'Pregunta';
+        const opciones = q.opciones || [];
 
+        // --- INICIO DE CAMBIOS EN HTML (generado por JS) ---
         contenedor.innerHTML = `
           <article class="tarjeta">
             <h2>${q.materia ? `[${q.materia}] ` : ''}${texto}</h2>
-            ${q.imagen ? `<img src="${q.imagen}" alt="Imagen de referencia" style="max-width:100%; margin:1rem 0;">` : ''}
+            ${q.imagen ? `<img src="${q.imagen}" alt="Imagen de referencia" style="max-width:100%; border-radius: 8px; margin:1rem 0;">` : ''}
+
             <form id="form-respuesta">
-              <textarea name="resp_texto" rows="4" placeholder="Escribe tu respuesta..." required></textarea>
-              <button type="submit">Enviar respuesta</button>
+              <div id="opciones"></div>
+              <!-- CAMBIO: Añadidas clases 'btn' y 'btn-primario' -->
+              <button type="submit" class="btn btn-primario">Enviar respuesta</button>
             </form>
-            <div style="margin-top:1rem;">
-              <button id="otra">Otra pregunta libre</button>
+
+            <!-- CAMBIO: Reemplazado style= por una clase CSS -->
+            <div class="contenedor-otra">
+              <!-- CAMBIO: Añadidas clases 'btn' y 'btn-secundario' -->
+              <button id="otra" type="button" class="btn btn-secundario">Otra pregunta libre</button>
             </div>
           </article>
         `;
+        // --- FIN DE CAMBIOS EN HTML ---
 
+        // Renderizamos las opciones tipo radio
+        const divOpciones = document.getElementById('opciones');
+        opciones.forEach((opcion, i) => {
+          divOpciones.innerHTML += `
+            <label>
+              <input type="radio" name="resp_opcion" value="${opcion}" required>
+              ${opcion}
+            </label>
+            <!-- CAMBIO: Eliminado el <br> (ahora se maneja por CSS con 'gap') -->
+          `;
+        });
+
+        // Envío de respuesta
         document.getElementById('form-respuesta').addEventListener('submit', async e => {
           e.preventDefault();
-          const respuesta = e.target.resp_texto.value.trim();
-          if (!respuesta) return alert('Debes escribir una respuesta.');
+          // Intentamos obtener el valor del radio button seleccionado
+          const formData = new FormData(e.target);
+          const seleccion = formData.get('resp_opcion');
+          
+          // No usamos alert()
+          const mostrarMensaje = (mensaje, esError = false) => {
+              // Esta es una forma simple de mostrar un modal, puedes mejorarla
+              let popup = document.createElement('div');
+              popup.textContent = mensaje;
+              popup.style = `
+                  position: fixed;
+                  top: 20px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  padding: 1em 2em;
+                  background: ${esError ? '#f8d7da' : '#d4edda'};
+                  color: ${esError ? '#721c24' : '#155724'};
+                  border: 1px solid ${esError ? '#f5c6cb' : '#c3e6cb'};
+                  border-radius: 8px;
+                  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                  z-index: 1000;
+              `;
+              document.body.appendChild(popup);
+              setTimeout(() => {
+                  popup.remove();
+              }, 3000);
+          };
+
+          // Verificamos si seleccionó algo
+          if (!seleccion) return mostrarMensaje('Debes seleccionar una respuesta.', true);
 
           try {
             const r = await fetch(`${BACKEND_URL}/api/respuestas`, {
               method: 'POST',
               headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({pregunta_id: q.id, respuesta})
+              body: JSON.stringify({
+                pregunta_id: q.id,
+                respuesta: seleccion
+              })
             });
             if (!r.ok) throw new Error('No se pudo registrar la respuesta');
-            alert('Respuesta registrada');
+
+            // Si el backend incluye la correcta, podrías verificarla aquí
+            if (q.correcta && seleccion === q.correcta) {
+              mostrarMensaje('✅ ¡Respuesta correcta!');
+            } else if (q.correcta) {
+              mostrarMensaje(`❌ Incorrecto. La respuesta correcta era: ${q.correcta}`);
+            } else {
+              mostrarMensaje('Respuesta registrada');
+            }
+
             e.target.reset();
-          } catch(err) {
-            alert(err.message);
+          } catch (err) {
+            mostrarMensaje(err.message, true);
           }
         });
 
+        // Aseguramos que el botón 'otra' sea tipo 'button' para no enviar el form
         document.getElementById('otra').addEventListener('click', cargarPregunta);
 
-      } catch(err) {
+      } catch (err) {
         console.error(err);
         contenedor.innerHTML = '<p>⚠️ No se pudo cargar la pregunta libre</p>';
       }
